@@ -1,20 +1,26 @@
 """ Dynamic NEAT GA implemented in Python 3.7 - 27/12/2018 """
 
-from typing import NoReturn, List, Tuple
 import sys
+import operator
+
+from typing import NoReturn, List, Tuple
+from .parent_selection import roulette_selection
 
 
 class Genome:
     """ Data storage class for feature weights """
-    def __init__(self, genome_id: int, score: int, weights: List):
+    def __init__(self, genome_id: int, score: int or None, weights: List):
         """
-        :param node_id: Unique integer ID number for node, e.g. 194th node)
+        :param genome_id: Unique integer ID number for node, e.g. 194th node)
         :param weights: Ordered importance of self.features as a list of floats
         """
 
-        self.genome_id = genome_id
+        self.id = genome_id
         self.score = score
         self.weights = weights
+
+    def __str__(self):
+        return "Genome {0}: {1}".format(self.id, self.score)
 
 
 class Generation:
@@ -28,6 +34,9 @@ class Generation:
 
         self.id = generation_id
         self.genomes = genomes
+
+    def __str__(self):
+        return "Generation: {0}{1}".format(self.id, ["\n    ".join(str(genome)) for genome in self.genomes])
 
 
 class NEAT:
@@ -63,7 +72,7 @@ class NEAT:
         self.latest_generation = None
 
         #  Set standard parent selection function
-        self.parent_selection = self.roulette_selection
+        self.parent_selection = roulette_selection
 
     def evolve(self) -> NoReturn or Genome:
         """
@@ -72,30 +81,30 @@ class NEAT:
         """
 
         #  Initialize Variables
-        current_score = int()
         current_generation = None
 
         _num_genomes = int()
         _num_generations = int()
 
         while True:
+            """ Evolve new generation """
 
-            new_generation = list()
-
-            """ Create new generation """
+            new_generation = Generation(_num_generations + 1, [])
 
             #  Find parents
             parents: List[Tuple] = self.parent_selection(current_generation, "score")
 
             #  Reproduce
             for couple in parents:
-                new_generation.append(self.reproduction(couple))
+                child = Genome(_num_genomes + 1, self.reproduction(couple))
+
+                new_generation.genomes.append(child)
+                _num_genomes += 1
 
             #  Mutate
-            new_generation = map(self.mutate, new_generation)
+            new_generation.genomes = map(self.mutate, new_generation.genomes)
 
-            current_generation = new_generation
-
+            #  Test Genomes
             for genome in new_generation:
 
                 sys.stdout.write(genome)
@@ -111,11 +120,11 @@ class NEAT:
                         print("Score input is of non-integer type")
                         raise
 
-            #  Store results locally
-            self.latest_generation = current_generation
+            #  Find fittest genome in new generation
+            fittest_genome = sorted(new_generation.genomes.items(), key=operator.itemgetter(1), reverse=True)[0]
 
             #  Return logic
-            if current_score >= self.max_score or \
+            if fittest_genome.score >= self.max_score or \
                     _num_generations >= self.max_generations:
                     break
 
@@ -124,53 +133,10 @@ class NEAT:
             else:
                 continue
 
-        print(current_generation)
+            #  Age population
+            current_generation = new_generation
+
+        print(fittest_genome)
         exit("OK - Completed")
 
-    def mutate(self, parents: Tuple[Genome]) -> Genome:
-        """
-        :param parents: Tuple of two parent genomes
-        :return: Genome
-        """
 
-        mutated_weights = [None]
-
-        return Genome(self.num_genomes, mutated_weights)
-
-    @staticmethod
-    def rank_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
-        """ Parent Rank Selection Algorithm """
-
-        for obj in objects:
-            try:
-                score = getattr(obj, fitness_attribute)
-            except AttributeError:
-                print("Invalid fitness attribute")
-                raise
-
-        return None
-
-    @staticmethod
-    def roulette_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
-        """ Roulette Wheel Parent Selection Algorithm """
-
-        import operator
-        import random
-
-        #  Calculate total sum of fitness values
-        fitness_sum = sum([getattr(obj, fitness_attribute) for obj in object])
-
-        #  Find random point
-        point = random.uniform(0, fitness_sum)
-
-        # Find the object which fitness attribute exceeds the variable point
-        for obj in sorted(objects.items(), key=getattr(operator.itemgetter(1), fitness_attribute)):
-            if fitness_sum > obj:
-                return obj
-
-            return tuple()
-
-    @staticmethod
-    def stochastic_sampling(objects: object, fitness_attribute: str) -> Tuple[object]:
-        """ Stochastic Universal Sampling Parent Selection Algorithm """
-        pass
