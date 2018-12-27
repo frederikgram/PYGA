@@ -63,7 +63,7 @@ class NEAT:
         self.latest_generation = None
 
         #  Set standard parent selection function
-        self.parent_selection = self.stochastic_sampling
+        self.parent_selection = self.roulette_selection
 
     def evolve(self) -> NoReturn or Genome:
         """
@@ -137,7 +137,6 @@ class NEAT:
 
         return Genome(self.num_genomes, mutated_weights)
 
-
     @staticmethod
     def rank_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
         """ Parent Rank Selection Algorithm """
@@ -146,16 +145,30 @@ class NEAT:
             try:
                 score = getattr(obj, fitness_attribute)
             except AttributeError:
-                print("Invalid fitness_attribute")
+                print("Invalid fitness attribute")
                 raise
 
         return None
 
-
     @staticmethod
     def roulette_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
         """ Roulette Wheel Parent Selection Algorithm """
-        pass
+
+        import operator
+        import random
+
+        #  Calculate total sum of fitness values
+        fitness_sum = sum([getattr(obj, fitness_attribute) for obj in object])
+
+        #  Find random point
+        point = random.uniform(0, fitness_sum)
+
+        # Find the object which fitness attribute exceeds the variable point
+        for obj in sorted(objects.items(), key=getattr(operator.itemgetter(1), fitness_attribute)):
+            if fitness_sum > obj:
+                return obj
+
+            return tuple()
 
     @staticmethod
     def stochastic_sampling(objects: object, fitness_attribute: str) -> Tuple[object]:
