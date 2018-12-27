@@ -23,7 +23,7 @@ def roulette_selection(objects: object, fitness_attribute: str) -> Tuple[object]
     import random
 
     #  Calculate total sum of fitness values
-    fitness_sum = sum([getattr(obj, fitness_attribute) for obj in object])
+    fitness_sum = sum([getattr(obj, fitness_attribute) for obj in objects])
 
     #  Find two parents
     parents = tuple()

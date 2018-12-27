@@ -1,10 +1,10 @@
-from typing import List, Tuple
-from src.GA import NEAT
+import sys
 import argparse
+
+from src.neat import NEAT
 
 if __name__ == "__main__":
     """
-    
     :param features: List
     :param outputs: List
     
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     """
 
     parser = argparse.ArgumentParser(description='Interface for the NEAT Genetic Algorithm')
-    parser.add_argument('features')
+    parser.add_argument('n_features')
     parser.add_argument('outputs')
 
     args = parser.parse_args()
@@ -25,8 +25,7 @@ if __name__ == "__main__":
     LOCAL_NEAT = NEAT()
 
     # Configure NEAT Inputs
-    LOCAL_NEAT.features = parser.features
-    LOCAL_NEAT.outputs = parser.outputs
+    LOCAL_NEAT._num_features = parser.n_features
 
     # Set Evolutionary Boundaries
     if parser.max_score:
@@ -36,8 +35,15 @@ if __name__ == "__main__":
 
     # Evolve
     if parser.iterate_evolution is True:
-        for generation in LOCAL_NEAT:
-            print(generation, sep=",", end="\n: ")
+        for generation in LOCAL_NEAT.evolve():
+            print(generation)
     else:
-        result = LOCAL_NEAT.fast_evolve()
-        print(result)
+        LOCAL_NEAT.evolve()
+        print("Fittest:", str(LOCAL_NEAT.fittest_genome))
+
+    # Label feature weights
+    feature_weights = zip(range(parser.n_features), LOCAL_NEAT.fittest_genome.weights)
+
+    # Return the weights
+    sys.stdout.write(feature_weights)
+
