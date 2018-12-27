@@ -55,10 +55,15 @@ class NEAT:
         self.outputs = outputs
 
         self.iterate_evolution = iterate_evolution
+        self.generation_size = generation_size
+
         self.max_generations = max_generations
         self.max_score = max_score
 
         self.latest_generation = None
+
+        #  Set standard parent selection function
+        self.parent_selection = self.stochastic_sampling
 
     def evolve(self) -> NoReturn or Genome:
         """
@@ -75,9 +80,23 @@ class NEAT:
 
         while True:
 
+            new_generation = list()
 
+            """ Create new generation """
 
-            for genome in generation:
+            #  Find parents
+            parents: List[Tuple] = self.parent_selection(current_generation, "score")
+
+            #  Reproduce
+            for couple in parents:
+                new_generation.append(self.reproduction(couple))
+
+            #  Mutate
+            new_generation = map(self.mutate, new_generation)
+
+            current_generation = new_generation
+
+            for genome in new_generation:
 
                 sys.stdout.write(genome)
 
@@ -119,3 +138,26 @@ class NEAT:
         return Genome(self.num_genomes, mutated_weights)
 
 
+    @staticmethod
+    def rank_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
+        """ Parent Rank Selection Algorithm """
+
+        for obj in objects:
+            try:
+                score = getattr(obj, fitness_attribute)
+            except AttributeError:
+                print("Invalid fitness_attribute")
+                raise
+
+        return None
+
+
+    @staticmethod
+    def roulette_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
+        """ Roulette Wheel Parent Selection Algorithm """
+        pass
+
+    @staticmethod
+    def stochastic_sampling(objects: object, fitness_attribute: str) -> Tuple[object]:
+        """ Stochastic Universal Sampling Parent Selection Algorithm """
+        pass
