@@ -4,49 +4,10 @@ import sys
 import operator
 
 from typing import NoReturn, List, Tuple
-from src.parent_selection import roulette_selection
-from src.mutators import *
+from src.classes import Genome, Generation
 
-
-class Genome:
-    """ Data storage class for feature weights """
-    def __init__(self, genome_id: int, weights: List, score: int or None = None):
-        """
-        :param genome_id: Unique integer ID number for node, e.g. 194th node)
-        :param weights: Ordered importance of self.features as a list of floats
-        """
-
-        self.id = genome_id
-        self.score = score
-        self.weights = weights
-
-    def __str__(self):
-        return "Genome {0}: {1}".format(self.id, self.score)
-
-
-class Generation:
-    """ Data storage class for nodes in a generation"""
-
-    def __init__(self, generation_id: int, genomes: List[Genome]):
-        """
-        :param generation_id: Unique integer ID number for generation, e.g. 6th generation
-        :param genomes: List of Genome types
-        """
-
-        self.id = generation_id
-        self.genomes = genomes
-
-    def __str__(self):
-        """ Sample output:
-
-            Generation: 9
-                - Genome 4: 39432
-                - Genome 5: 423
-                - Genome 6: -5
-            """
-
-        return "Generation: {0}{1}".format(self.id,
-                                           '\n'.join(["    -".join(str(genome)) for genome in self.genomes]))
+from src.selection import roulette_selection
+from src.mutation import *
 
 
 class NEAT:
@@ -79,8 +40,7 @@ class NEAT:
 
         #  TODO  Get algorithm choices from config
         self.ps_func = roulette_selection
-        self.mutate_func = random_swap
-        self.reproduce_func = int
+        self.mutate_func = uniform
 
     def evolve(self) -> NoReturn or Genome:
         """
@@ -88,26 +48,24 @@ class NEAT:
                  if iterate is False -> Return only the best Genome from the final generation
         """
 
+        import random
+
         #  Initialize Variables
         current_generation = None
 
         _num_genomes = int()
         _num_generations = int()
 
+        #  Create Initial Population
+        new_generation = Generation(_num_generations + 1, [])
+
+        for _ in range(self.generation_size):
+            new_generation.genomes.append(Genome(_num_genomes,
+                                                 [random.uniform(0, 1) for _ in range(self._num_features)]))
+            _num_genomes += 1
+        _num_generations += 1
+
         while True:
-            # Evolve new generation
-
-            new_generation = Generation(_num_generations + 1, [])
-
-            #  Find parents
-            if current_generation is not None:
-                parents: List[Tuple] = self.ps_func(current_generation.genomes, "score")
-            else:
-                #  Create the first generation
-                for _ in range(self.generation_size):
-                    new_generation.genomes.append(Genome(_num_genomes,
-                                                         [0 for _ in range(self._num_features)]))
-                    _num_genomes += 1
 
             #  Test Genomes
             for genome in new_generation.genomes:
@@ -125,6 +83,9 @@ class NEAT:
                     except TypeError:
                         print("Score input is of non-integer type")
                         raise
+
+            #  Selection
+
 
             #  Reproduce
             for couple in parents:
@@ -153,5 +114,5 @@ class NEAT:
             current_generation = new_generation
 
         self.fittest_genome = fittest_genome
-        print(fittest_genome)
+        print(str(fittest_genome), fittest_genome.weights, sep='\,')
         exit("OK - Completed")
