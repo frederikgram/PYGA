@@ -1,5 +1,6 @@
 # PYGA - NOT DONE / NAME NOT FOUND
-Dynamically implement weight tweaking using Genetic Algorithms into your project via. simple stdio communication
+Dynamically implement weight tweaking using Genetic Algorithms 
+into your project via. simple stdio communication
 
 ## Installation
 
@@ -24,14 +25,16 @@ interface.n_features = 10 # How many features will your application use?
 interface.max_score = 1000 #  stop at n fitness score
 interface.max_generation = 50 #  stop at n generation
 
-interface.stagnation_hault = False # If False, the evolution will keep going even if population fitness stagnates
+interface.stagnation_hault = False # If False, the evolution will keep going
+                                   # even if population fitness stagnates
 
 interface.iterate_evolution = True # Yield every generation as a list of Genomes
                                    # if False, return the fittest Genome at the end of the evolution
 
 ```
 ### Evolution
-Take a simple pong game as an example, where a computer plays by itself, against a wall. And its movements (up or down) is to be determined by a set of features.
+Take a simple pong game as an example, where a computer plays by itself,
+ against a wall. And its movements (up or down) is to be determined by a set of features.
 In this case you would simply:
 1) write a set of features to stdout before the game starts
 2) read a list of weights from stdin
