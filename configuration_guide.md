@@ -29,11 +29,6 @@ GA.configure({"selection_function": " FUNCTION_NAME "})
 - roulette:
     Roulette-wheel selection
 
-- rank_selection
-    :Rank Selection Algorithm
-
-- stochastic_sampling:
-    Stochastic universal sampling (SUS)
 ```
 
 ### Mutation Algorithms
@@ -51,6 +46,11 @@ GA.configure({"mutation_function": " FUNCTION_NAME "})
 ```
 ### Miscellaneous 
 ```
+
+- mutation_rate:
+        # Integer describing the fractional percentge of new genomes
+        # that will be mutated
+        # mutation_rate = 7 means 1/7th of genomes will be mutated
 - iterate_evolution:
 
         # True -> Yield every genome of every generation

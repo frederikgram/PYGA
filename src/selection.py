@@ -1,20 +1,5 @@
 """ Collection of parent selection algorithms for Genetic Algorithms"""
 
-from typing import Tuple
-
-
-def rank_selection(objects: object, fitness_attribute: str) -> Tuple[object]:
-    """ Parent Rank Selection Algorithm """
-
-    for obj in objects:
-        try:
-            score = getattr(obj, fitness_attribute)
-        except AttributeError:
-            print("Invalid fitness attribute")
-            raise
-
-    return tuple()
-
 
 def roulette_selection(objects: list, fitness_attribute: str) -> list:
     """ Roulette Wheel Parent Selection Algorithm """
@@ -39,8 +24,3 @@ def roulette_selection(objects: list, fitness_attribute: str) -> list:
                 break
 
     return parents
-
-
-def stochastic_sampling(objects: object, fitness_attribute: str) -> Tuple[object]:
-    """ Stochastic Universal Sampling Parent Selection Algorithm """
-    pass

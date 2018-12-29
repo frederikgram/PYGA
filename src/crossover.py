@@ -7,6 +7,3 @@ def average_crossover(couple: list) -> list:
 
     average_weights = [mean([a, b]) for a, b in zip(*couple)]
     return average_weights
-
-
-#average_crossover([0.24], [0.11])
