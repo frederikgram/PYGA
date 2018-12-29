@@ -8,7 +8,9 @@ def roulette_selection(objects: list, fitness_attribute: str) -> list:
 
     #  Calculate total sum of fitness values
     fitness_sum = sum([getattr(obj, fitness_attribute) for obj in objects])
-    objects = sorted(objects, key=lambda obj: getattr(obj, fitness_attribute), reverse=True)
+    objects = sorted(
+        objects, key=lambda obj: getattr(obj, fitness_attribute), reverse=True
+    )
 
     #  Find two parents
     parents = list()

@@ -1,6 +1,8 @@
-""" Dynamic GA GA implemented in Python 3.7 """
+""" Dynamic GA implemented in Python 3.7 """
 
+import sys
 from typing import NoReturn, Generator
+
 from src.classes import Genome, Generation
 from src.selection import *
 from src.mutation import *
@@ -21,13 +23,14 @@ class GA:
         self.score_function = score_function
         self.iterate_evolution = False
         self.generation_size = 100
-
+        self.mutation_chance = 7
         self.max_generations = None
         self.max_score = None
 
-        self.mutation_chance = 7
+        #  Debug and logging
+        self.display_info = False
 
-        #  TODO  Get standard algorithm choices from config
+        #  Set standard functions
         self.selection_function = roulette_selection
         self.mutation_function = uniform
         self.crossover_function = mean_crossover
@@ -48,7 +51,7 @@ class GA:
                       "but has type", type(value))
                 raise
 
-    def evolve(self) -> Generator[list]:
+    def evolve(self):
         """ Write a docstring lol """
 
         import random
@@ -61,27 +64,21 @@ class GA:
         current_generation = Generation(_num_generations + 1, [])
 
         for _ in range(self.generation_size):
-            current_generation.genomes.append(Genome(_num_genomes,
-                                                 [random.uniform(0, 1) for _ in range(self._num_features)]))
+            current_generation.genomes.append(Genome(_num_genomes + 1,
+                                                     [random.uniform(0, 1) for _ in range(self._num_features)]))
             _num_genomes += 1
         _num_generations += 1
 
         while True:
-            """ Start evolutionary loop,
-                yield fittest genome for every generation
-            """
+            # Start evolutionary loop
+
+            if self.display_info is True:
+                sys.stdout.write(str(current_generation))
 
             #  Test Genomes
             for genome in current_generation.genomes:
-
                 #  Get genome score
-                try:
-                    score = self.score_function(genome.weights)
-                    genome.score = score
-                except Exception as e:
-                    # Possible exceptions not tested
-                    print(str(e))
-                    raise
+                genome.score = self.score_function(genome.weights)
 
             #  Selection
             couples = list()
@@ -94,14 +91,14 @@ class GA:
 
             #  Crossover
             for couple in couples:
-                child = Genome(_num_genomes, self.crossover_function([couple[0].weights, couple[1].weights]))
+                child = Genome(_num_genomes +1, self.crossover_function([couple[0].weights, couple[1].weights]))
                 new_generation.genomes.append(child)
                 _num_genomes += 1
 
             #  Elitism repopulation
             new_generation.genomes.extend(sorted(current_generation.genomes,
-                                                 key=lambda obj:  getattr(obj,
-                                                "score"), reverse=True)[:self.generation_size - len(new_generation.genomes)])
+                                                 key=lambda obj: getattr(obj, "score"), reverse=True)
+                                          [:self.generation_size - len(new_generation.genomes)])
 
             #  Mutate
             for genome in new_generation.genomes:
@@ -110,15 +107,18 @@ class GA:
 
             #  Find fittest genome in new generation
             fittest_genome = sorted(current_generation.genomes,
-                                         key=lambda obj:  getattr(obj,
-                                                     "score"), reverse=True)[0]
-            yield fittest_genome.weights
+                                    key=lambda obj: getattr(obj,
+                                                            "score"), reverse=True)[0]
+            if self.iterate_evolution is True:
+                yield fittest_genome.weights
+
+            # Store new generation
             current_generation = new_generation
 
             #  TODO  Return when score has stagnated
             #  Return logic
             if self.max_score is not None and fittest_genome.score >= self.max_score or \
-                    self.max_generations is not None and _num_generations >= self.max_generations:
+               self.max_generations is not None and _num_generations >= self.max_generations:
                 break
 
-        yield fittest_genome
+        return fittest_genome

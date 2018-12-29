@@ -61,6 +61,7 @@ GA.configure({"crossover_function": "FUNCTION_NAME"})
         # Integer describing the fractional percentge of new genomes
         # that will be mutated
         # mutation_rate = 7 means 1/7th of genomes will be mutated
+        
 - iterate_evolution:
 
         # True -> Yield every genome of every generation
@@ -81,4 +82,11 @@ GA.configure({"crossover_function": "FUNCTION_NAME"})
         # True -> Stops evolution once the fittest genome hasnt since the last generation
         
         # False -> Continues the evolution even if the resulting fitness value stagnates
+
+- display_info:
+        
+        # True -> writes information about every generation and genome to stdout WARNING! substancially decreases effiency
+                  However i would advocate trying it atleast once, to get a better understanding of what is happening.
+        
+        # False -> No additional information is printed
 ```

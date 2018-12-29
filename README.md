@@ -17,7 +17,7 @@ difficult to configure the framework so it works for your specific application
 
 
 
-// Example code can be found in the Examples/pong folder
+// Example code can currently be found in /tests/test_ga.py
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -1,14 +1,14 @@
-""" Complete test for the PYGA framework"""
+""" Overall test for the PYGA framework"""
 
 from src.ga import GA
 import numpy as np
 
-TEST_CONFIGURATION = {"generation_size": 100,
-                      "selection_function": "roulette",
-                      "mutation_function": "uniform",
-                      "iterate_evolution": True,
-                      "max_score": 10,
-                      }
+TEST_CONFIGURATION = {
+    "generation_size": 100,
+    "iterate_evolution": True,
+    "max_score": 0.995,
+    "display_info": False,
+}
 
 
 def give_score(weights) -> float:
@@ -16,9 +16,8 @@ def give_score(weights) -> float:
     return np.mean(weights)
 
 
-LOCAL_NEAT = GA(_num_features=5, score_function=give_score)
-LOCAL_NEAT.configure(TEST_CONFIGURATION)
+LOCAL_GA = GA(_num_features=5, score_function=give_score)
+LOCAL_GA.configure(TEST_CONFIGURATION)
 
-
-for new_weight in LOCAL_NEAT.evolve():
-        print(new_weight)
+for iteration in LOCAL_GA.evolve():
+    print("Average score this generation:", np.mean(iteration))

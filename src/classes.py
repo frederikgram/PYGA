@@ -3,6 +3,7 @@
 
 class Genome:
     """ Data storage class for feature weights """
+
     def __init__(self, genome_id: int, weights: list, score: int or None = None):
         """
         :param genome_id: Unique integer ID number for node, e.g. 194th node)
@@ -20,7 +21,9 @@ class Genome:
           - weights: [0.34, 0.22, 0.95]
         """
 
-        return "Genome {0}: {1}\n  - weights: {2}".format(self.id, self.score, self.weights)
+        return "Genome {0}: {1}\n  - weights: {2}".format(
+            self.id, self.score, self.weights
+        )
 
 
 class Generation:
@@ -53,6 +56,6 @@ class Generation:
                     ...
             """
 
-        return "Generation: {0}{1}".format(self.id,
-                                           '\n'.join(["    -".join(str(genome)) for genome in self.genomes]))
-
+        return "Generation: {0}\n    {1}".format(
+            self.id, "\n\n    ".join([str(genome) for genome in self.genomes])
+        )
