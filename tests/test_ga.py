@@ -6,7 +6,7 @@ import numpy as np
 TEST_CONFIGURATION = {"generation_size": 100,
                       "selection_function": "roulette",
                       "mutation_function": "uniform",
-                      "iterate_evolution": False,
+                      "iterate_evolution": True,
                       "max_score": 10,
                       }
 
