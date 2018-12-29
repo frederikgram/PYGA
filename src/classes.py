@@ -21,7 +21,7 @@ class Genome:
           - weights: [0.34, 0.22, 0.95]
         """
 
-        return "Genome {0}: {1}\n  - weights: {2}".format(
+        return "Genome {0}: score = {1}\n  - weights: {2}".format(
             self.id, self.score, self.weights
         )
 

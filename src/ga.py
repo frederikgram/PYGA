@@ -121,4 +121,4 @@ class GA:
                self.max_generations is not None and _num_generations >= self.max_generations:
                 break
 
-        return fittest_genome
+        yield fittest_genome.weights
