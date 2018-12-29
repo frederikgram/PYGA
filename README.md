@@ -1,6 +1,6 @@
 # PYGA - NOT DONE / NAME NOT FOUND
 Dynamically implement weight tweaking using Genetic Algorithms 
-into your project via. simple stdio communication
+into your project.
 
 ## Installation
 

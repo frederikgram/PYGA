@@ -120,5 +120,4 @@ class GA:
                     self.max_generations is not None and _num_generations >= self.max_generations:
                 break
 
-        print(str(fittest_genome), fittest_genome.weights, sep='\,')
-        exit("OK - Completed")
+        yield fittest_genome
