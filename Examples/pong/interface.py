@@ -3,7 +3,8 @@
 from src.ga import GA
 from .pong import play
 
-BEST_OF_THREE_CONFIGURATION = {
+BEST_OF_THREE_CONFIGURATION = 
+                        {
                         "generation_size": 1000,
                         "selection_function": "roulette_selection",
                         "mutation_function": "uniform",
