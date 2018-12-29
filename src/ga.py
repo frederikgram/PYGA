@@ -11,6 +11,7 @@ from src.crossover import *
 
 class GA:
     """ TODO """
+
     def __init__(self, _num_features: int, score_function: callable):
         """
         :param _num_features: Number of input features
@@ -47,8 +48,15 @@ class GA:
                 print(key, "is not a valid attribute")
                 raise
             except TypeError:
-                print("type of value for", key, "should be of type", type(getattr(self, key)), '\n',
-                      "but has type", type(value))
+                print(
+                    "type of value for",
+                    key,
+                    "should be of type",
+                    type(getattr(self, key)),
+                    "\n",
+                    "but has type",
+                    type(value),
+                )
                 raise
 
     def evolve(self):
@@ -64,8 +72,12 @@ class GA:
         current_generation = Generation(_num_generations + 1, [])
 
         for _ in range(self.generation_size):
-            current_generation.genomes.append(Genome(_num_genomes + 1,
-                                                     [random.uniform(0, 1) for _ in range(self._num_features)]))
+            current_generation.genomes.append(
+                Genome(
+                    _num_genomes + 1,
+                    [random.uniform(0, 1) for _ in range(self._num_features)],
+                )
+            )
             _num_genomes += 1
         _num_generations += 1
 
@@ -91,14 +103,21 @@ class GA:
 
             #  Crossover
             for couple in couples:
-                child = Genome(_num_genomes +1, self.crossover_function([couple[0].weights, couple[1].weights]))
+                child = Genome(
+                    _num_genomes + 1,
+                    self.crossover_function([couple[0].weights, couple[1].weights]),
+                )
                 new_generation.genomes.append(child)
                 _num_genomes += 1
 
-            #  Elitism repopulation
-            new_generation.genomes.extend(sorted(current_generation.genomes,
-                                                 key=lambda obj: getattr(obj, "score"), reverse=True)
-                                          [:self.generation_size - len(new_generation.genomes)])
+            #  Elitist repopulation
+            new_generation.genomes.extend(
+                sorted(
+                    current_generation.genomes,
+                    key=lambda obj: getattr(obj, "score"),
+                    reverse=True,
+                )[: self.generation_size - len(new_generation.genomes)]
+            )
 
             #  Mutate
             for genome in new_generation.genomes:
@@ -106,17 +125,23 @@ class GA:
                     genome.weights = self.mutation_function(genome.weights)
 
             #  Find fittest genome in new generation
-            fittest_genome = sorted(current_generation.genomes,
-                                    key=lambda obj: getattr(obj,
-                                                            "score"), reverse=True)[0]
+            fittest_genome = sorted(
+                current_generation.genomes,
+                key=lambda obj: getattr(obj, "score"),
+                reverse=True,
+            )[0]
 
             # Store new generation
             current_generation = new_generation
 
             #  TODO  Return when score has stagnated
             #  Return logic
-            if self.max_score is not None and fittest_genome.score >= self.max_score or \
-               self.max_generations is not None and _num_generations >= self.max_generations:
+            if (
+                self.max_score is not None
+                and fittest_genome.score >= self.max_score
+                or self.max_generations is not None
+                and _num_generations >= self.max_generations
+            ):
                 break
             elif self.iterate_evolution is True:
                 yield fittest_genome.weights
