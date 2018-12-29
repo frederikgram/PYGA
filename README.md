@@ -12,6 +12,9 @@ pip install PYGA
 
 ## Usage
 
+Read the [configuration guide](configuration_guide.md) thoroughly before using the framework, otherwise it will be
+difficult to configure the framework so it works for your specific application
+
 ### Initialization
 
 ```python

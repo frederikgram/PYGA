@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-from src.neat import NEAT
+from src.ga import NEAT
 
 if __name__ == "__main__":
     """
@@ -15,11 +15,6 @@ if __name__ == "__main__":
     
     """
 
-    parser = argparse.ArgumentParser(description='Interface for the NEAT Genetic Algorithm')
-    parser.add_argument('n_features')
-    parser.add_argument('outputs')
-
-    args = parser.parse_args()
 
     #  Initialize GA instance
     LOCAL_NEAT = NEAT()

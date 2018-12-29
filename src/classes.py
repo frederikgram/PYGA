@@ -1,4 +1,4 @@
-""" Collection of classes to be used in neat.py"""
+""" Collection of classes to be used in ga.py"""
 
 
 class Genome:
@@ -14,7 +14,13 @@ class Genome:
         self.score = score
 
     def __str__(self):
-        return "Genome {0}: {1}".format(self.id, self.score)
+        """ Sample output:
+
+        Genome 584: 3525
+          - weights: [0.34, 0.22, 0.95]
+        """
+
+        return "Genome {0}: {1}\n  - weights: {2}".format(self.id, self.score, self.weights)
 
 
 class Generation:
@@ -29,13 +35,22 @@ class Generation:
         self.id = generation_id
         self.genomes = genomes
 
+    @property
+    def average_score(self):
+        return sum([genome.score for genome in self.genomes]) / len(self.genomes)
+
     def __str__(self):
         """ Sample output:
 
             Generation: 9
                 - Genome 4: 39432
+                    - weights: [0.43, 0.12, 0.83]
+
                 - Genome 5: 423
+                    ...
+
                 - Genome 6: -5
+                    ...
             """
 
         return "Generation: {0}{1}".format(self.id,
