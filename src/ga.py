@@ -1,11 +1,7 @@
-""" Dynamic GA GA implemented in Python 3.7 - 27/12/2018 """
+""" Dynamic GA GA implemented in Python 3.7 """
 
-import sys
-import operator
-
-from typing import NoReturn, List, Tuple
+from typing import NoReturn, Generator
 from src.classes import Genome, Generation
-
 from src.selection import roulette_selection
 from src.mutation import *
 from src.crossover import average_crossover
@@ -31,8 +27,6 @@ class GA:
 
         self.mutation_chance = 7
 
-        self.fittest_genome = None
-
         #  TODO  Get standard algorithm choices from config
         self.ps_func = roulette_selection
         self.mutate_func = uniform
@@ -53,11 +47,8 @@ class GA:
                       "but has type", type(value))
                 raise
 
-    def evolve(self) -> NoReturn or Genome:
-        """
-        :return: if iterate is True -> Yield every genome of every generation
-                 if iterate is False -> Return only the best Genome from the final generation
-        """
+    def evolve(self) -> Generator[list]:
+        """ Write a docstring lol """
 
         import random
 
@@ -75,6 +66,9 @@ class GA:
         _num_generations += 1
 
         while True:
+            """ Start evolutionary loop,
+                yield fittest genome for every generation
+            """
 
             #  Test Genomes
             for genome in current_generation.genomes:
@@ -84,6 +78,7 @@ class GA:
                     score = self.score_function(genome.weights)
                     genome.score = score
                 except Exception as e:
+                    # Possible exceptions not tested
                     print(str(e))
                     raise
 
@@ -104,8 +99,8 @@ class GA:
 
             #  Elitism repopulation
             new_generation.genomes.extend(sorted(current_generation.genomes,
-                                         key=lambda obj:  getattr(obj,
-                                                     "score"), reverse=True)[:self.generation_size - len(new_generation.genomes)])
+                                                 key=lambda obj:  getattr(obj,
+                                                "score"), reverse=True)[:self.generation_size - len(new_generation.genomes)])
 
             #  Mutate
             for genome in new_generation.genomes:
@@ -125,6 +120,5 @@ class GA:
                     self.max_generations is not None and _num_generations >= self.max_generations:
                 break
 
-        self.fittest_genome = fittest_genome
         print(str(fittest_genome), fittest_genome.weights, sep='\,')
         exit("OK - Completed")
