@@ -109,8 +109,6 @@ class GA:
             fittest_genome = sorted(current_generation.genomes,
                                     key=lambda obj: getattr(obj,
                                                             "score"), reverse=True)[0]
-            if self.iterate_evolution is True:
-                yield fittest_genome.weights
 
             # Store new generation
             current_generation = new_generation
@@ -120,5 +118,7 @@ class GA:
             if self.max_score is not None and fittest_genome.score >= self.max_score or \
                self.max_generations is not None and _num_generations >= self.max_generations:
                 break
+            elif self.iterate_evolution is True:
+                yield fittest_genome.weights
 
         yield fittest_genome.weights

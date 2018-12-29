@@ -11,7 +11,7 @@ LOCAL_GA = GA()
 
 test_configuration = {
                     "generation_size": 1000,
-                    "mutation_function": "roulette",
+                    "mutation_function": "roulette_selection",
                     "max_score": 1000,
                     "iterate_evolution": True
                     }
@@ -26,7 +26,7 @@ Every setting and / or function meant for user-configuration can be found in thi
 ```
 GA.configure({"selection_function": " FUNCTION_NAME "})
 
-- roulette:
+- roulette_selection:
     Roulette-wheel selection
 
 ```
@@ -85,8 +85,9 @@ GA.configure({"crossover_function": "FUNCTION_NAME"})
 
 - display_info:
         
-        # True -> writes information about every generation and genome to stdout WARNING! substancially decreases effiency
-                  However i would advocate trying it atleast once, to get a better understanding of what is happening.
+        # True -> writes information about every generation and genome to stdout
+         WARNING! substancially decreases effiency, However i would advocate trying it atleast once
+         to get a better understanding of what is happening.
         
         # False -> No additional information is printed
 ```
