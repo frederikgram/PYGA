@@ -44,6 +44,16 @@ GA.configure({"mutation_function": " FUNCTION_NAME "})
     Replaces the value of the chosen gene
     with a uniform random value between 0 and 1
 ```
+
+### Crossover functions
+
+```
+GA.configure({"crossover_function": "FUNCTION_NAME"})
+
+- mean_crossover:
+    Uses the numpy.mean() values of each parent to create a new genome
+```
+
 ### Miscellaneous 
 ```
 

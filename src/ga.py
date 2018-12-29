@@ -2,18 +2,18 @@
 
 from typing import NoReturn, Generator
 from src.classes import Genome, Generation
-from src.selection import roulette_selection
+from src.selection import *
 from src.mutation import *
-from src.crossover import average_crossover
+from src.crossover import *
 
 
 class GA:
     """ TODO """
     def __init__(self, _num_features: int, score_function: callable):
-
         """
         :param _num_features: Number of input features
-
+        :param score_function: Callable where a list of weights can be input,
+                               and a score as a float can be returned
         """
 
         #  Initialize Class
@@ -28,8 +28,9 @@ class GA:
         self.mutation_chance = 7
 
         #  TODO  Get standard algorithm choices from config
-        self.ps_func = roulette_selection
-        self.mutate_func = uniform
+        self.selection_function = roulette_selection
+        self.mutation_function = uniform
+        self.crossover_function = mean_crossover
 
     def configure(self, settings: dict) -> NoReturn:
         """ Mass configure GA using a dictionary
@@ -85,7 +86,7 @@ class GA:
             #  Selection
             couples = list()
             for _ in range(len(current_generation.genomes)):
-                couple = roulette_selection(current_generation.genomes, "score")
+                couple = self.selection_function(current_generation.genomes, "score")
                 couples.append(couple)
 
             new_generation = Generation(_num_generations + 1, [])
@@ -93,7 +94,7 @@ class GA:
 
             #  Crossover
             for couple in couples:
-                child = Genome(_num_genomes, average_crossover([couple[0].weights, couple[1].weights]))
+                child = Genome(_num_genomes, self.crossover_function([couple[0].weights, couple[1].weights]))
                 new_generation.genomes.append(child)
                 _num_genomes += 1
 
@@ -105,7 +106,7 @@ class GA:
             #  Mutate
             for genome in new_generation.genomes:
                 if random.randint(0, self.mutation_chance) == 0:
-                    genome.weights = uniform(genome.weights)
+                    genome.weights = self.mutation_function(genome.weights)
 
             #  Find fittest genome in new generation
             fittest_genome = sorted(current_generation.genomes,

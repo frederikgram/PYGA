@@ -1,9 +1,9 @@
 """ Collections of Crossover algorithms"""
 
 
-def average_crossover(couple: list) -> list:
-    """ Creates a list of average values from two parent lists"""
+def mean_crossover(couple: list) -> list:
+    """ Creates a list of mean values from two parent lists"""
     from numpy import mean
 
-    average_weights = [mean([a, b]) for a, b in zip(*couple)]
-    return average_weights
+    mean_weights = [mean([a, b]) for a, b in zip(*couple)]
+    return mean_weights
