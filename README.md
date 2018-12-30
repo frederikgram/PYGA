@@ -35,12 +35,12 @@ TEST_CONFIGURATION = {          #  Here we createa a simple configuration,
 }
 
 
-def asses_fitness(weights: list) -> float:   #  gives a fitness score based on the mean of the weights
+def assess_fitness(weights: list) -> float:   #  gives a fitness score based on the mean of the weights
     """ Higher weights give higher fitness """
     return np.mean(weights)
 
-# Initialize a GA, with 5 weights and fitness assesment function
-LOCAL_GA = GA(_num_weights=5, fitness_function=asses_fitness)  
+# Initialize a GA, with 5 weights and fitness assessment function
+LOCAL_GA = GA(_num_weights=5, fitness_function=assess_fitness)  
 
 # Apply configuration
 LOCAL_GA.configure(TEST_CONFIGURATION)          
@@ -80,12 +80,12 @@ TEST_CONFIGURATION = {          #  Here we createa a simple configuration,
 }
 
 
-def asses_fitness(weights: list) -> float:   #  gives a fitness score based on the mean of the weights
+def assess_fitness(weights: list) -> float:   #  gives a fitness score based on the mean of the weights
     """ Higher weights give higher fitness """
     return np.mean(weights)
 
-# Initialize a GA, with 5 weights and fitness assesment function
-LOCAL_GA = GA(_num_weights=5, fitness_function=asses_fitness)  
+# Initialize a GA, with 5 weights and fitness assessment function
+LOCAL_GA = GA(_num_weights=5, fitness_function=assess_fitness)  
 
 # Apply configuration
 LOCAL_GA.configure(TEST_CONFIGURATION)          
