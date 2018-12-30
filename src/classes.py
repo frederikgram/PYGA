@@ -4,7 +4,7 @@
 class Genome:
     """ Data storage class for feature weights """
 
-    def __init__(self, genome_id: int, weights: list, score: int or None = None):
+    def __init__(self, genome_id: int, weights: list, fitness: int or None = None):
         """
         :param genome_id: Unique integer ID number for node, e.g. 194th node)
         :param weights: Ordered importance of self.features as a list of floats
@@ -12,7 +12,7 @@ class Genome:
 
         self.id = genome_id
         self.weights = weights
-        self.score = score
+        self.fitness = fitness
 
     def __str__(self):
         """ Sample output:
@@ -21,8 +21,8 @@ class Genome:
           - weights: [0.34, 0.22, 0.95]
         """
 
-        return "Genome {0}: score = {1}\n  - weights: {2}".format(
-            self.id, self.score, self.weights
+        return "Genome {0}: fitness = {1}\n  - weights: {2}".format(
+            self.id, self.fitness, self.weights
         )
 
 
@@ -37,10 +37,6 @@ class Generation:
 
         self.id = generation_id
         self.genomes = genomes
-
-    @property
-    def average_score(self):
-        return sum([genome.score for genome in self.genomes]) / len(self.genomes)
 
     def __str__(self):
         """ Sample output:

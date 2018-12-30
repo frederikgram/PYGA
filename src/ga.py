@@ -1,7 +1,7 @@
 """ Dynamic GA implemented in Python 3.7 """
 
 import sys
-from typing import NoReturn, Generator
+from typing import NoReturn
 
 from src.classes import Genome, Generation
 from src.selection import *
@@ -12,21 +12,21 @@ from src.crossover import *
 class GA:
     """ TODO """
 
-    def __init__(self, _num_features: int, score_function: callable):
+    def __init__(self, _num_weights: int, fitness_function: callable):
         """
-        :param _num_features: Number of input features
-        :param score_function: Callable where a list of weights can be input,
-                               and a score as a float can be returned
+        :param _num_weights: Number of weights to evolve
+        :param fitness_function: Callable where a list of weights can be input,
+                               and a fitness as a float can be returned
         """
 
         #  Initialize Class
-        self._num_features = _num_features
-        self.score_function = score_function
+        self._num_weights = _num_weights
+        self.fitness_function = fitness_function
         self.iterate_evolution = False
         self.generation_size = 100
         self.mutation_chance = 7
         self.max_generations = None
-        self.max_score = None
+        self.max_fitness = None
 
         #  Debug and logging
         self.display_info = False
@@ -53,8 +53,7 @@ class GA:
                     key,
                     "should be of type",
                     type(getattr(self, key)),
-                    "\n",
-                    "but has type",
+                    "\nbut has type",
                     type(value),
                 )
                 raise
@@ -71,11 +70,12 @@ class GA:
         #  Create Initial Population
         current_generation = Generation(_num_generations + 1, [])
 
+        #  Assign random weights to each genome
         for _ in range(self.generation_size):
             current_generation.genomes.append(
                 Genome(
                     _num_genomes + 1,
-                    [random.uniform(0, 1) for _ in range(self._num_features)],
+                    [random.uniform(0, 1) for _ in range(self._num_weights)],
                 )
             )
             _num_genomes += 1
@@ -84,18 +84,18 @@ class GA:
         while True:
             # Start evolutionary loop
 
-            if self.display_info is True:
-                sys.stdout.write(str(current_generation))
-
             #  Test Genomes
             for genome in current_generation.genomes:
-                #  Get genome score
-                genome.score = self.score_function(genome.weights)
+                #  Get genome fitness
+                genome.fitness = self.fitness_function(genome.weights)
+
+            if self.display_info is True:
+                sys.stdout.write(str(current_generation))
 
             #  Selection
             couples = list()
             for _ in range(len(current_generation.genomes)):
-                couple = self.selection_function(current_generation.genomes, "score")
+                couple = self.selection_function(current_generation.genomes, "fitness")
                 couples.append(couple)
 
             new_generation = Generation(_num_generations + 1, [])
@@ -114,7 +114,7 @@ class GA:
             new_generation.genomes.extend(
                 sorted(
                     current_generation.genomes,
-                    key=lambda obj: getattr(obj, "score"),
+                    key=lambda obj: getattr(obj, "fitness"),
                     reverse=True,
                 )[: self.generation_size - len(new_generation.genomes)]
             )
@@ -127,23 +127,21 @@ class GA:
             #  Find fittest genome in new generation
             fittest_genome = sorted(
                 current_generation.genomes,
-                key=lambda obj: getattr(obj, "score"),
+                key=lambda obj: getattr(obj, "fitness"),
                 reverse=True,
             )[0]
 
             # Store new generation
             current_generation = new_generation
 
-            #  TODO  Return when score has stagnated
             #  Return logic
             if (
-                self.max_score is not None
-                and fittest_genome.score >= self.max_score
+                self.max_fitness is not None
+                and fittest_genome.fitness >= self.max_fitness
                 or self.max_generations is not None
                 and _num_generations >= self.max_generations
             ):
                 break
             elif self.iterate_evolution is True:
                 yield fittest_genome.weights
-
         yield fittest_genome.weights

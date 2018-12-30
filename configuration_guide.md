@@ -12,7 +12,7 @@ LOCAL_GA = GA()
 test_configuration = {
                     "generation_size": 1000,
                     "mutation_function": "roulette_selection",
-                    "max_score": 1000,
+                    "max_fitness": 1000,
                     "iterate_evolution": True
                     }
                     
@@ -74,8 +74,8 @@ GA.configure({"crossover_function": "FUNCTION_NAME"})
 - max_generations: 
     An upper boundary for the needed generations to stop evolution
 
-- max_score: 
-    An upper boundary for the needed score to stop evolution
+- max_fitness: 
+    An upper boundary for the needed fitness to stop evolution
 
 - stagnation_hault: 
         
