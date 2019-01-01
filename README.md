@@ -1,6 +1,5 @@
 # PYGA
-Dynamically implement weight tweaking via. Genetic Algorithms 
-into your project.
+Dynamic weight tweaking using Genetic Algorithms.
 
 ## Installation
 
