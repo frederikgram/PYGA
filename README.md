@@ -16,13 +16,13 @@ difficult to configure the framework so it works for your specific application
 
 ### Fast evolution
 Sometimes for a project, we do not care about the inbetween steps, we just want an answer and we want it _now_
-for this exact reason, the PYGA GA can also be used as a simple return function.
+for this exact reason, the PYGA can also be used as a simple return function.
 in the [configuration guide](configuration_guide.md) it is shown how to set iterate_evolution.
 
 The list of weights that is returned, is the fittest genome of the newest generation. Meaning that 
 older and potentially better solutions _could_ get lost. 
 
-Below is an example of how to use PYGA as a simple return function.
+Below is an example of how to use the PYGA as a simple return function.
 ```
 from PYGA import GA #  First we import our GA like so
 import numpy as np
@@ -59,12 +59,12 @@ print(fittest_weight)
 
 ### Iterative evolution
 In some projects, especially projects like teaching, the ability to visualize the evolution is necessary.
-because of this, PYGA is developed so it works both iteratively or as a simple return-function.
+because of this, the PYGA is developed so it works both iteratively or as a simple return-function.
 
 as seen in the [configuration guide](configuration_guide.md) you simply set iterate_evolution to be True
 to enable this feature.
 
-Below is an example of how to use PYGA for iterative evolution, 
+Below is an example of how to use the PYGA for iterative evolution, 
 the example simply gives a score based on the mean of the weights (higher is better)
 
 ```
